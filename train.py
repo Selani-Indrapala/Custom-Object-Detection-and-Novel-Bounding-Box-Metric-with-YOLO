@@ -700,6 +700,7 @@ def main(opt, callbacks=Callbacks()):
             "warmup_momentum": (False, 0.0, 0.95),  # warmup initial momentum
             "warmup_bias_lr": (False, 0.0, 0.2),  # warmup initial bias lr
             "box": (False, 0.02, 0.2),  # box loss gain
+            "ar": (False, 0.02, 0.2),  # box loss gain
             "cls": (False, 0.2, 4.0),  # cls loss gain
             "cls_pw": (False, 0.5, 2.0),  # cls BCELoss positive_weight
             "obj": (False, 0.2, 4.0),  # obj loss gain (scale with pixels)
