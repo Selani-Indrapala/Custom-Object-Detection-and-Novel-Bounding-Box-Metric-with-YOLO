@@ -91,7 +91,7 @@ class Loggers:
             "train/box_loss",
             "train/obj_loss",
             "train/cls_loss",  # train loss
-            "train/ar_loss",
+            # "train/ar_loss",
             "metrics/precision",
             "metrics/recall",
             "metrics/mAP_0.5",
@@ -99,7 +99,7 @@ class Loggers:
             "val/box_loss",
             "val/obj_loss",
             "val/cls_loss",  # val loss
-            "val/ar_loss",
+            # "val/ar_loss",
             "x/lr0",
             "x/lr1",
             "x/lr2",
@@ -254,7 +254,7 @@ class Loggers:
     def on_fit_epoch_end(self, vals, epoch, best_fitness, fi):
         """Callback that logs metrics and saves them to CSV or NDJSON at the end of each fit (train+val) epoch."""
         x = dict(zip(self.keys, vals))
-        print(len(self.keys),len(vals))
+        # print(len(self.keys),len(vals))
         if self.csv:
             file = self.save_dir / "results.csv"
             n = len(x) + 1  # number of cols
