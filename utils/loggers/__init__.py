@@ -92,7 +92,7 @@ class Loggers:
             "train/obj_loss",
             "train/cls_loss",  # train loss
             # "train/ar_loss",
-            # "train/ctr_loss",
+            "train/ctr_loss",
             # "train/sz_loss",
             "metrics/precision",
             "metrics/recall",
@@ -102,7 +102,7 @@ class Loggers:
             "val/obj_loss",
             "val/cls_loss",  # val loss
             # "val/ar_loss",
-            # "val/ctr_loss",
+            "val/ctr_loss",
             # "val/sz_loss",
             "x/lr0",
             "x/lr1",
