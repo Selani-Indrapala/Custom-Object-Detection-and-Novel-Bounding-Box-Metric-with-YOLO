@@ -49,21 +49,24 @@ class DatasetConverter:
 
                 obj_list.append([label, x, y, width, height])
 
-            return obj_list
+            txt_label_dir = text_labels_dir + '/' + labels[47:-4] + '.txt'  # Change file extension from .xml to .txt
+                with open(txt_label_dir, 'w') as f:
+                    for obj in obj_list:
+                        f.write(f"{obj[0]} {obj[1]} {obj[2]} {obj[3]} {obj[4]}\n")  # Write YOLO label format
 
-    def save_yolo_labels(self, label_list, filename):
-        txt_label_path = os.path.join(self.text_labels_dir, filename)
-        with open(txt_label_path, 'w') as f:
-            for obj in label_list:
-                f.write(f"{obj[0]} {obj[1]} {obj[2]} {obj[3]} {obj[4]}\n")  # Write YOLO label format
+    # def save_yolo_labels(self, label_list, filename):
+    #     txt_label_path = os.path.join(self.text_labels_dir, filename)
+    #     with open(txt_label_path, 'w') as f:
+    #         for obj in label_list:
+    #             f.write(f"{obj[0]} {obj[1]} {obj[2]} {obj[3]} {obj[4]}\n")  # Write YOLO label format
 
     def process_annotations(self):
         xml_files = sorted(glob(os.path.join(self.annotations_dir, '*.xml')))
         
         for xml_file in xml_files:
             label_list = self.convert_xml_to_yolo(xml_file)
-            file_name = os.path.basename(xml_file).replace('.xml', '.txt')
-            self.save_yolo_labels(label_list, file_name)
+            # file_name = os.path.basename(xml_file).replace('.xml', '.txt')
+            # self.save_yolo_labels(label_list, file_name)
 
     def copy_images(self):
         copy_tree(self.images_dir, self.imgs_dir)
