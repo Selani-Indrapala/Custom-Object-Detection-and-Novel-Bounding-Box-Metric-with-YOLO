@@ -162,23 +162,22 @@ class ComputeLoss:
                 lbox += (1.0 - iou).mean()  # iou loss
 
                 # Compute Aspect Ratio Loss
-                # par = pwh[:, 0] / (pwh[:, 1] + 1e-6)  # Predicted Aspect Ratio (Avoid division by zero)
-                # tar = tbox[i][:, 2] / (tbox[i][:, 3] + 1e-6)  # Target Aspect Ratio
-                # lar += torch.mean((par - tar) ** 2)  # MSE loss for aspect ratio
+                par = pwh[:, 0] / (pwh[:, 1] + 1e-6)  # Predicted Aspect Ratio (Avoid division by zero)
+                tar = tbox[i][:, 2] / (tbox[i][:, 3] + 1e-6)  # Target Aspect Ratio
+                lar += torch.mean((par - tar) ** 2)  # MSE loss for aspect ratio
 
                 # Compute Center Alignment Loss
-                # pcx = pxy[:, 0]  # Predicted center x-coordinate
-                # pcy = pxy[:, 1]  # Predicted center y-coordinate
-                # tcx = tbox[i][:, 0]  # Target center x-coordinate
-                # tcy = tbox[i][:, 1]  # Target center y-coordinate                
-                # lcenter = torch.mean((pcx - tcx) ** 2 + (pcy - tcy) ** 2)  # MSE loss for center alignment
-                # lcenter = lcenter.unsqueeze(0)
+                pcx = pxy[:, 0]  # Predicted center x-coordinate
+                pcy = pxy[:, 1]  # Predicted center y-coordinate
+                tcx = tbox[i][:, 0]  # Target center x-coordinate
+                tcy = tbox[i][:, 1]  # Target center y-coordinate                
+                lcenter = torch.mean((pcx - tcx) ** 2 + (pcy - tcy) ** 2)  # MSE loss for center alignment
+                lcenter = lcenter.unsqueeze(0)
 
                 # Compute the area similarity
                 pred_area = pwh[:, 0] * pwh[:, 1]  # Predicted area (width * height)
                 target_area = tbox[i][:, 2] * tbox[i][:, 3]  # Target area (width * height)
-                lsize += torch.mean((pred_area - target_area) ** 2) 
-                lar = lsize
+                lsize += torch.mean((pred_area - target_area) ** 2)
 
                 # Objectness
                 iou = iou.detach().clamp(0).type(tobj.dtype)
@@ -206,9 +205,11 @@ class ComputeLoss:
         lobj *= self.hyp["obj"]
         lcls *= self.hyp["cls"]
         lar *= self.hyp["ar"]
+        lcenter *= self.hyp["ctr"]
+        lsize *= self.hyp["sz"]
         bs = tobj.shape[0]  # batch size
 
-        return (lbox + lobj + lcls + lar) * bs, torch.cat((lbox, lobj, lcls, lar)).detach()
+        return (lbox + lobj + lcls + lar + lcenter + lsize) * bs, torch.cat((lbox, lobj, lcls, lar, lcenter, lsize)).detach()
         #return (lbox + lobj + lcls) * bs, torch.cat((lbox, lobj, lcls)).detach()
 
     def build_targets(self, p, targets):
