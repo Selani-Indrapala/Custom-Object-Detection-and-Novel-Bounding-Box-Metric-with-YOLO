@@ -142,6 +142,7 @@ class ComputeLoss:
         lbox = torch.zeros(1, device=self.device)  # box loss
         lobj = torch.zeros(1, device=self.device)  # object loss
         lar = torch.zeros(1, device=self.device)   # aspect ratio loss
+        lsize = torch.zeros(1, device=self.device)   # size similarity loss
         tcls, tbox, indices, anchors = self.build_targets(p, targets)  # targets
 
         # Losses
