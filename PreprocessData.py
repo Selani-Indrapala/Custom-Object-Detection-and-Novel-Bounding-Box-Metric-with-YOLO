@@ -88,15 +88,14 @@ class DatasetSplitter:
             f.write('\n'.join(val_img) + '\n')
 
     def update_yaml(self):
-        data = {
-            'train': 'dataset/train.txt',  # Training images list (80%)
-            'val': 'dataset/val.txt',  # Validation images list (10%)
-            'nc': 2,  # Number of classes (cat, dog)
-            'names': ['cat', 'dog']  # Class labels
-        }
-
         with open(os.path.join(self.output_dir, 'data.yaml'), 'w') as f:
-            yaml.dump(data, f)
+            data = {
+                'train': 'dataset/train.txt',  # Training images list (80%)
+                'val': 'dataset/val.txt',  # Validation images list (10%)
+                'nc': 2,  # Number of classes (cat, dog)
+                'names': ['cat', 'dog']  # Class labels
+            }
+            yaml.dump(data, f)  # Save as YAML file
 
 class DogCatDatasetProcessor:
     def __init__(self, annotations_dir, images_dir, output_dir, class_mapping):
