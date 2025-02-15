@@ -19,8 +19,56 @@ class DatasetConverter:
         os.makedirs(self.text_labels_dir, exist_ok=True)
         os.makedirs(self.imgs_dir, exist_ok=True)
 
-    def convert_xml_to_yolo(self, xml_file):
-        with open(xml_file, 'r') as f:
+    # def convert_xml_to_yolo(self, xml_file):
+    #     with open(xml_file, 'r') as f:
+    #         data = f.read()
+    #         soup = BeautifulSoup(data, 'xml')  # Parse XML annotation file
+
+    #         # Extract image width and height
+    #         img_size = soup.find('size')
+    #         img_width = int(img_size.find('width').text)
+    #         img_height = int(img_size.find('height').text)
+
+    #         # Find all object annotations in the image
+    #         objects = soup.find_all('object')
+    #         obj_list = []
+
+    #         # Process each object in the image
+    #         for obj in objects:
+    #             label = self.class_mapping(obj.find('name').text)  # Get class ID
+    #             xmin = int(obj.find('xmin').text)
+    #             ymin = int(obj.find('ymin').text)
+    #             xmax = int(obj.find('xmax').text)
+    #             ymax = int(obj.find('ymax').text)
+
+    #             # Convert bounding box to YOLO format
+    #             x = ((xmin + xmax) / 2) / img_width  # Center X (normalized)
+    #             y = ((ymin + ymax) / 2) / img_height  # Center Y (normalized)
+    #             width = (xmax - xmin) / img_width  # Width (normalized)
+    #             height = (ymax - ymin) / img_height  # Height (normalized)
+
+    #             obj_list.append([label, x, y, width, height])
+
+    #         txt_label_dir = self.text_labels_dir + '/' + labels[47:-4] + '.txt'  # Change file extension from .xml to .txt
+    #         with open(txt_label_dir, 'w') as f:
+    #             for obj in obj_list:
+    #                 f.write(f"{obj[0]} {obj[1]} {obj[2]} {obj[3]} {obj[4]}\n")  # Write YOLO label format
+
+    # def save_yolo_labels(self, label_list, filename):
+    #     txt_label_path = os.path.join(self.text_labels_dir, filename)
+    #     with open(txt_label_path, 'w') as f:
+    #         for obj in label_list:
+    #             f.write(f"{obj[0]} {obj[1]} {obj[2]} {obj[3]} {obj[4]}\n")  # Write YOLO label format
+
+    def process_annotations(self):
+        xml_files = sorted(glob(os.path.join(self.annotations_dir, '*.xml')))
+        
+        for xml_file in xml_files:
+            # label_list = self.convert_xml_to_yolo(xml_file)
+            # file_name = os.path.basename(xml_file).replace('.xml', '.txt')
+            # self.save_yolo_labels(label_list, file_name)
+
+            with open(xml_file, 'r') as f:
             data = f.read()
             soup = BeautifulSoup(data, 'xml')  # Parse XML annotation file
 
@@ -49,24 +97,10 @@ class DatasetConverter:
 
                 obj_list.append([label, x, y, width, height])
 
-            txt_label_dir = self.text_labels_dir + '/' + labels[47:-4] + '.txt'  # Change file extension from .xml to .txt
+            txt_label_dir = self.text_labels_dir + '/' + xml_file[47:-4] + '.txt'  # Change file extension from .xml to .txt
             with open(txt_label_dir, 'w') as f:
                 for obj in obj_list:
                     f.write(f"{obj[0]} {obj[1]} {obj[2]} {obj[3]} {obj[4]}\n")  # Write YOLO label format
-
-    # def save_yolo_labels(self, label_list, filename):
-    #     txt_label_path = os.path.join(self.text_labels_dir, filename)
-    #     with open(txt_label_path, 'w') as f:
-    #         for obj in label_list:
-    #             f.write(f"{obj[0]} {obj[1]} {obj[2]} {obj[3]} {obj[4]}\n")  # Write YOLO label format
-
-    def process_annotations(self):
-        xml_files = sorted(glob(os.path.join(self.annotations_dir, '*.xml')))
-        
-        for xml_file in xml_files:
-            label_list = self.convert_xml_to_yolo(xml_file)
-            # file_name = os.path.basename(xml_file).replace('.xml', '.txt')
-            # self.save_yolo_labels(label_list, file_name)
 
     def copy_images(self):
         copy_tree(self.images_dir, self.imgs_dir)
