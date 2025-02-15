@@ -170,8 +170,9 @@ class ComputeLoss:
                 pcy = pxy[:, 1]  # Predicted center y-coordinate
                 tcx = tbox[i][:, 0]  # Target center x-coordinate
                 tcy = tbox[i][:, 1]  # Target center y-coordinate                
-                # lcenter = torch.mean((pcx - tcx) ** 2 + (pcy - tcy) ** 2)  # MSE loss for center alignment
-                lar = torch.mean((pcx - tcx) ** 2 + (pcy - tcy) ** 2)  # MSE loss for center alignment
+                lcenter = torch.mean((pcx - tcx) ** 2 + (pcy - tcy) ** 2)  # MSE loss for center alignment
+                lcenter = lcenter.unsqueeze(0)
+                lar = lcenter  # MSE loss for center alignment
 
                 # Objectness
                 iou = iou.detach().clamp(0).type(tobj.dtype)
