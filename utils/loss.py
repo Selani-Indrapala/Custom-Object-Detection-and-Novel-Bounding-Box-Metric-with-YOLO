@@ -209,8 +209,8 @@ class ComputeLoss:
         lsize *= self.hyp["sz"]
         bs = tobj.shape[0]  # batch size
 
-        return (lbox + lobj + lcls + lar + lcenter + lsize) * bs, torch.cat((lbox, lobj, lcls, lar, lcenter, lsize)).detach()
-        #return (lbox + lobj + lcls) * bs, torch.cat((lbox, lobj, lcls)).detach()
+        # return (lbox + lobj + lcls + lar + lcenter + lsize) * bs, torch.cat((lbox, lobj, lcls, lar, lcenter, lsize)).detach()
+        return (lbox + lobj + lcls) * bs, torch.cat((lbox, lobj, lcls)).detach()
 
     def build_targets(self, p, targets):
         """Prepares model targets from input targets (image,class,x,y,w,h) for loss computation, returning class, box,
