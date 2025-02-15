@@ -2,7 +2,7 @@ import os
 import yaml
 import argparse
 from glob import glob
-from shutil import copytree
+from distutils.dir_util import copytree
 from bs4 import BeautifulSoup
 from sklearn.model_selection import train_test_split
 
