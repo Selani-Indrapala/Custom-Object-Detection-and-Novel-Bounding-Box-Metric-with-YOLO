@@ -101,7 +101,7 @@ class DatasetSplitter:
 class DogCatDatasetProcessor:
     def __init__(self, annotations_dir, images_dir, output_dir, class_mapping):
         self.converter = DatasetConverter(annotations_dir, images_dir, output_dir, class_mapping)
-        self.splitter = DatasetSplitter(os.path.join(output_dir, 'images'), output_dir)
+        self.splitter = DatasetSplitter(images_dir, output_dir)
 
     def process(self):
         self.converter.process_annotations()
