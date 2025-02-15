@@ -141,6 +141,7 @@ class ComputeLoss:
         lcls = torch.zeros(1, device=self.device)  # class loss
         lbox = torch.zeros(1, device=self.device)  # box loss
         lobj = torch.zeros(1, device=self.device)  # object loss
+        lar = torch.zeros(1, device=self.device)   # aspect ratio loss
         tcls, tbox, indices, anchors = self.build_targets(p, targets)  # targets
 
         # Losses
@@ -158,6 +159,11 @@ class ComputeLoss:
                 pbox = torch.cat((pxy, pwh), 1)  # predicted box
                 iou = bbox_iou(pbox, tbox[i], CIoU=True).squeeze()  # iou(prediction, target)
                 lbox += (1.0 - iou).mean()  # iou loss
+
+                # Compute Aspect Ratio Loss
+                par = pwh[:, 0] / (pwh[:, 1] + 1e-6)  # Predicted Aspect Ratio (Avoid division by zero)
+                tar = tbox[i][:, 2] / (tbox[i][:, 3] + 1e-6)  # Target Aspect Ratio
+                lar += torch.mean((par - tar) ** 2)  # MSE loss for aspect ratio
 
                 # Objectness
                 iou = iou.detach().clamp(0).type(tobj.dtype)
@@ -184,9 +190,10 @@ class ComputeLoss:
         lbox *= self.hyp["box"]
         lobj *= self.hyp["obj"]
         lcls *= self.hyp["cls"]
+        lar *= self.hyp["ar"]
         bs = tobj.shape[0]  # batch size
 
-        return (lbox + lobj + lcls) * bs, torch.cat((lbox, lobj, lcls)).detach()
+        return (lbox + lobj + lcls + lar) * bs, torch.cat((lbox, lobj, lcls, lar)).detach()
 
     def build_targets(self, p, targets):
         """Prepares model targets from input targets (image,class,x,y,w,h) for loss computation, returning class, box,
