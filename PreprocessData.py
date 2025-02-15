@@ -49,7 +49,7 @@ class DatasetConverter:
 
                 obj_list.append([label, x, y, width, height])
 
-            txt_label_dir = text_labels_dir + '/' + labels[47:-4] + '.txt'  # Change file extension from .xml to .txt
+            txt_label_dir = self.text_labels_dir + '/' + labels[47:-4] + '.txt'  # Change file extension from .xml to .txt
             with open(txt_label_dir, 'w') as f:
                 for obj in obj_list:
                     f.write(f"{obj[0]} {obj[1]} {obj[2]} {obj[3]} {obj[4]}\n")  # Write YOLO label format
