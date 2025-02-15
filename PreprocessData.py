@@ -2,7 +2,7 @@ import os
 import yaml
 import argparse
 from glob import glob
-from distutils.dir_util import copytree
+from distutils.dir_util import copy_tree
 from bs4 import BeautifulSoup
 from sklearn.model_selection import train_test_split
 
@@ -66,7 +66,7 @@ class DatasetConverter:
             self.save_yolo_labels(label_list, file_name)
 
     def copy_images(self):
-        copytree(self.images_dir, self.imgs_dir)
+        copy_tree(self.images_dir, self.imgs_dir)
 
 class DatasetSplitter:
     def __init__(self, images_dir, output_dir):
