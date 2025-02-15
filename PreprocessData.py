@@ -14,10 +14,10 @@ class DatasetConverter:
         self.class_mapping = class_mapping
 
         self.text_labels_dir = os.path.join(output_dir, 'labels')
-        # self.imgs_dir = os.path.join(output_dir, 'images')
+        self.imgs_dir = os.path.join(output_dir, 'images')
         
         os.makedirs(self.text_labels_dir, exist_ok=True)
-        # os.makedirs(self.imgs_dir, exist_ok=True)
+        os.makedirs(self.imgs_dir, exist_ok=True)
 
     def convert_xml_to_yolo(self, xml_file):
         with open(xml_file, 'r') as f:
@@ -65,8 +65,8 @@ class DatasetConverter:
             file_name = os.path.basename(xml_file).replace('.xml', '.txt')
             self.save_yolo_labels(label_list, file_name)
 
-    # def copy_images(self):
-    #     copytree(self.images_dir, self.imgs_dir)
+    def copy_images(self):
+        copytree(self.images_dir, self.imgs_dir)
 
 class DatasetSplitter:
     def __init__(self, images_dir, output_dir):
@@ -105,7 +105,7 @@ class DogCatDatasetProcessor:
 
     def process(self):
         self.converter.process_annotations()
-        # self.converter.copy_images()
+        self.converter.copy_images()
         
         train_img, val_img = self.splitter.split_dataset()
         self.splitter.save_image_paths(train_img, val_img)
