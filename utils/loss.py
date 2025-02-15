@@ -166,13 +166,18 @@ class ComputeLoss:
                 # lar += torch.mean((par - tar) ** 2)  # MSE loss for aspect ratio
 
                 # Compute Center Alignment Loss
-                pcx = pxy[:, 0]  # Predicted center x-coordinate
-                pcy = pxy[:, 1]  # Predicted center y-coordinate
-                tcx = tbox[i][:, 0]  # Target center x-coordinate
-                tcy = tbox[i][:, 1]  # Target center y-coordinate                
-                lcenter = torch.mean((pcx - tcx) ** 2 + (pcy - tcy) ** 2)  # MSE loss for center alignment
-                lcenter = lcenter.unsqueeze(0)
-                lar = lcenter  # MSE loss for center alignment
+                # pcx = pxy[:, 0]  # Predicted center x-coordinate
+                # pcy = pxy[:, 1]  # Predicted center y-coordinate
+                # tcx = tbox[i][:, 0]  # Target center x-coordinate
+                # tcy = tbox[i][:, 1]  # Target center y-coordinate                
+                # lcenter = torch.mean((pcx - tcx) ** 2 + (pcy - tcy) ** 2)  # MSE loss for center alignment
+                # lcenter = lcenter.unsqueeze(0)
+
+                # Compute the area similarity
+                pred_area = pwh[:, 0] * pwh[:, 1]  # Predicted area (width * height)
+                target_area = tbox[i][:, 2] * tbox[i][:, 3]  # Target area (width * height)
+                lsize += torch.mean((pred_area - target_area) ** 2) 
+                lar = lsize
 
                 # Objectness
                 iou = iou.detach().clamp(0).type(tobj.dtype)
