@@ -69,38 +69,38 @@ class DatasetConverter:
             # self.save_yolo_labels(label_list, file_name)
 
             with open(xml_file, 'r') as f:
-            data = f.read()
-            soup = BeautifulSoup(data, 'xml')  # Parse XML annotation file
-
-            # Extract image width and height
-            img_size = soup.find('size')
-            img_width = int(img_size.find('width').text)
-            img_height = int(img_size.find('height').text)
-
-            # Find all object annotations in the image
-            objects = soup.find_all('object')
-            obj_list = []
-
-            # Process each object in the image
-            for obj in objects:
-                label = self.class_mapping(obj.find('name').text)  # Get class ID
-                xmin = int(obj.find('xmin').text)
-                ymin = int(obj.find('ymin').text)
-                xmax = int(obj.find('xmax').text)
-                ymax = int(obj.find('ymax').text)
-
-                # Convert bounding box to YOLO format
-                x = ((xmin + xmax) / 2) / img_width  # Center X (normalized)
-                y = ((ymin + ymax) / 2) / img_height  # Center Y (normalized)
-                width = (xmax - xmin) / img_width  # Width (normalized)
-                height = (ymax - ymin) / img_height  # Height (normalized)
-
-                obj_list.append([label, x, y, width, height])
-
-            txt_label_dir = self.text_labels_dir + '/' + xml_file[47:-4] + '.txt'  # Change file extension from .xml to .txt
-            with open(txt_label_dir, 'w') as f:
-                for obj in obj_list:
-                    f.write(f"{obj[0]} {obj[1]} {obj[2]} {obj[3]} {obj[4]}\n")  # Write YOLO label format
+                data = f.read()
+                soup = BeautifulSoup(data, 'xml')  # Parse XML annotation file
+    
+                # Extract image width and height
+                img_size = soup.find('size')
+                img_width = int(img_size.find('width').text)
+                img_height = int(img_size.find('height').text)
+    
+                # Find all object annotations in the image
+                objects = soup.find_all('object')
+                obj_list = []
+    
+                # Process each object in the image
+                for obj in objects:
+                    label = self.class_mapping(obj.find('name').text)  # Get class ID
+                    xmin = int(obj.find('xmin').text)
+                    ymin = int(obj.find('ymin').text)
+                    xmax = int(obj.find('xmax').text)
+                    ymax = int(obj.find('ymax').text)
+    
+                    # Convert bounding box to YOLO format
+                    x = ((xmin + xmax) / 2) / img_width  # Center X (normalized)
+                    y = ((ymin + ymax) / 2) / img_height  # Center Y (normalized)
+                    width = (xmax - xmin) / img_width  # Width (normalized)
+                    height = (ymax - ymin) / img_height  # Height (normalized)
+    
+                    obj_list.append([label, x, y, width, height])
+    
+                txt_label_dir = self.text_labels_dir + '/' + xml_file[47:-4] + '.txt'  # Change file extension from .xml to .txt
+                with open(txt_label_dir, 'w') as f:
+                    for obj in obj_list:
+                        f.write(f"{obj[0]} {obj[1]} {obj[2]} {obj[3]} {obj[4]}\n")  # Write YOLO label format
 
     def copy_images(self):
         copy_tree(self.images_dir, self.imgs_dir)
