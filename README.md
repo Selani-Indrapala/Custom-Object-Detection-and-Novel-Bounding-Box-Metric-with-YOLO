@@ -62,6 +62,10 @@ This will:
 - Train for 10 epochs
 - Save the model results in the `runs/train/cat_and_dog_yolov5s_results` directory
 
+### 3. The Loss Function 
+
+The current implementation is for the loss function that only considers the size similarity as an additional metric as this gave the best performance. The loss function can be viewed under utils/loss.py in the ComputeLoss class under the __call__ function. The hyperparameter weights for each loss metric can be found under data/hyps/hyp.scratch-low.yaml.
+
 ## Model Evaluation
 
 After training, you can evaluate the model on the validation set using the following command:
