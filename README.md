@@ -66,12 +66,14 @@ This will:
 
 The current implementation is for the loss function that only considers the size similarity as an additional metric as this gave the best performance. The loss function can be viewed under utils/loss.py in the ComputeLoss class under the __call__ function. The hyperparameter weights for each loss metric can be found under data/hyps/hyp.scratch-low.yaml.
 
-```# Compute Aspect Ratio Loss
+```
+# Compute Aspect Ratio Loss
 par = pwh[:, 0] / (pwh[:, 1] + 1e-6)  # Predicted Aspect Ratio (Avoid division by zero)
 tar = tbox[i][:, 2] / (tbox[i][:, 3] + 1e-6)  # Target Aspect Ratio
 lar += torch.mean((par - tar) ** 2)  # MSE loss for aspect ratio
 ```
-```# Compute Center Alignment Loss
+```
+# Compute Center Alignment Loss
 pcx = pxy[:, 0]  # Predicted center x-coordinate
 pcy = pxy[:, 1]  # Predicted center y-coordinate
 tcx = tbox[i][:, 0]  # Target center x-coordinate
@@ -79,7 +81,8 @@ tcy = tbox[i][:, 1]  # Target center y-coordinate
 lcenter = torch.mean((pcx - tcx) ** 2 + (pcy - tcy) ** 2)  # MSE loss for center alignment
 lcenter = lcenter.unsqueeze(0)
 ```
-```# Compute the area similarity
+```
+# Compute the area similarity
 pred_area = pwh[:, 0] * pwh[:, 1]  # Predicted area (width * height)
 target_area = tbox[i][:, 2] * tbox[i][:, 3]  # Target area (width * height)
 lsize += torch.mean((pred_area - target_area) ** 2)
